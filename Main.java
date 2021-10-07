@@ -41,10 +41,21 @@ class Main {
   }
 
   //outputs detail about the state of the pet
+  //takes hunger as input
   public static void stateOfPet (int hunger)
   {
-    print("Hunger level is " + hunger + "/5");
-    return;
+    //hunger value then used to determine message
+    if ( hunger == 1) {
+      print("Pet is bloated.");
+    } else if (hunger == 2) {
+      print("Pet is full.");
+    } else if (hunger == 3) {
+      print("Pet is peckish.");
+    } else if (hunger == 4) {
+      print("Pet is famished.");
+    } else {
+      print("Pet is ravenous.");
+    }
   }
 
   //produces a random number between 1 and 5 to be a hunger value
