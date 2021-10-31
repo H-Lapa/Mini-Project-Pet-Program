@@ -1,169 +1,198 @@
 //Author: Hugo Lapa
-//09/10/2021
+//31/10/2021
 import java.util.Scanner;
 import java.util.Random;
-
-class petRecord {
-  String name;
-  String species;
-  int hunger;
-  int happiness;
-}
-//main class for the program
-class Main {
-  //main function executed
-  public static void main(String[] args) 
-  {
-    sequence();
-    System.exit(1);
-  }
-
-  //method calls methods in the right order
-  public static void sequence()
-  {
-    petRecord pet = new petRecord();
-    pet.name = ask("What's your pets name? ");
-    pet.species = ask("What species is your pet? ");
-    print("Game Start for " + pet.name + " the " + pet.species);
-    game(pet);
-
-  }
-
-  //produces message with pet name
-  public static String ask (String x)
-  {
-    Scanner scanner = new Scanner(System.in);
-    
-    System.out.print(x);
-    String response = scanner.nextLine(); 
-    // input for pets name
-
-    return response;
-  }
-
-  //outputs to the screen
-  public static void print (String txt) 
-  {
-    System.out.println(txt);
-    return;
-  }
-
-  //this is where the game starts and ends
-  public static void game (petRecord record) 
-  {
-    //set random hunger and happy level
-    record = randStats(record);
-    int count = 1; // counting how many rounds
-    boolean end = false;
-    while (end == false)
+class Game {
+    public static void main (String[] args)
     {
-      //keeping track of the previous hunger and happy levels
-      //later used to see if games ends
-      int hunger = record.hunger;
-      int happiness = record.happiness;
+        String petname;
+        String petspecies;
 
-      //print statements
-      stateOfPet(record); 
-      String action = ask("Action: ");
-      feedCuddle(action, record);
+        pet[] petarr = new pet[5];
+        general.print("(maximum of 5)");
+        int petQuant = general.getint("Quantity of pets: ");
+        for (int i = 0; i < petQuant; i++)
+        {
+            petname = general.getstring("Pet name: ");
+            petspecies = general.getstring("Pet species: ");
+            pet record = createpet(petname, petspecies);
+            petarr[i] = record;
+        }
 
-      //ends game if the score is 5 for 2 rounds
-      if ((hunger == 5 && record.hunger == 5) || (happiness == 5 && record.happiness == 5)) {
-        stateOfPet(record);
-        print("Hunger or Happiness was at 5 for 2 rounds!");
-        end = true;
-      }
+        boolean end = false;
+        int count = 0;
+        String action;
+        int num;
+        int petnum;
+        boolean valid = true;
+        while (end == false)
+        {
+            for (int z = 0; z < petQuant; z++)
+            {
+                general.print(" ");
+                general.print(z+1 + ". " + getname(petarr[z]) + " the " + getspecies(petarr[z]));
+                stateofpet(petarr[z]);
+            }
+            general.print(" ");
+            num = general.getint("Pick a pet to apply action: ");
+            petnum = num - 1;
+            action = general.getstring("Feed or Cuddle pet: ");
+            valid = feedCuddle(action, petarr[petnum]);
+            if (valid == true)
+            {
+                for (int i = 0; i < petQuant;i++)
+                {
+                    if (petarr[i] != petarr[petnum])
+                    {
+                        regressStats(petarr[i]);
+                    }
+                }
+                count += 1;
+            }
+            else
+            {
+                general.print("Sorry your response wasnt understood! Please try again...");
+            }
 
-      count = count + 1;
+        }
 
-      //when the game lasts until round 10 it ends
-      if (count == 10) {
-        stateOfPet(record);
-        print("You won! you lasted until round 10.");
-        end = true;
-      }
-    }
-    if (count < 10) {
-      // message for loss
-      print("Pet died at round " + count + "/10");
-    }
-    return;
-  }
-
-  //outputs detail about the state of the pet
-  //takes hunger as input
-  public static void stateOfPet (petRecord record)
-  {
-    //hunger value then used to determine message
-    if ( record.hunger == 1) {
-      print("Pet is bloated. Hunger score at " + record.hunger +"/5");
-    } else if (record.hunger == 2) {
-      print("Pet is full. Hunger score at " + record.hunger +"/5");
-    } else if (record.hunger == 3) {
-      print("Pet is peckish. Hunger score at " + record.hunger +"/5");
-    } else if (record.hunger == 4) {
-      print("Pet is famished. Hunger score at " + record.hunger +"/5");
-    } else {
-      print("Pet is ravenous. Hunger score at " + record.hunger +"/5");
-    }
-
-    if ( record.happiness == 1) {
-      print("Pet is blissfull. Happiness score at " + record.happiness +"/5");
-    } else if (record.happiness == 2) {
-      print("Pet is cheerfull. Happiness score at " + record.happiness +"/5");
-    } else if (record.happiness == 3) {
-      print("Pet is neutral. Happiness score at " + record.happiness +"/5");
-    } else if (record.happiness == 4) {
-      print("Pet is unhappy. Happiness score at " + record.happiness +"/5");
-    } else {
-      print("Pet is depressed. Happiness score at " + record.happiness +"/5");
-    }
-  }
-
-  //produces a random number between 1 and 5 to be a hunger value
-  public static int getRand (int num)
-  {
-    Random rand = new Random();
-    int random;
-
-    random = rand.nextInt(num) + 1;
-
-    return random;
-  }
-
-  //produces random hunger and happy level for pet
-  public static petRecord randStats (petRecord record)
-  {
-    record.hunger = getRand(5);
-    record.happiness = getRand(5);
-    return record;
-  }
-
-  //actions taken depending wether user response is cuddle or feed
-  public static petRecord feedCuddle (String action, petRecord record)
-  {
-    if (action.equals("cuddle")) {
-      record.happiness = record.happiness - getRand(3);
-      if (record.happiness < 1) {
-        record.happiness = 1;
-      }
-      record.hunger = record.hunger + getRand(3);
-      if (record.hunger > 5) {
-        record.hunger = 5;
-      }
+        System.exit(0);
     }
 
-    if (action.equals("feed")) {
-      record.hunger = record.hunger - getRand(3);
-      if (record.hunger < 1) {
-        record.hunger = 1;
-      }
-      record.happiness = record.happiness + getRand(3);
-      if (record.happiness > 5) {
-        record.happiness = 5;
-      }
-    }
-    return record;
-  }
 
+
+
+
+
+
+
+
+
+    //accessor methods
+    public static void setpetspecies (pet p, String txt)
+    {
+        p.species = txt;
+    }
+    public static void setpetname (pet p, String txt)
+    {
+        p.name = txt;
+    }
+    public static String getname (pet p)
+    {
+        return p.name;
+    }
+    public static String getspecies (pet p)
+    {
+        return p.species;
+    }
+    public static int gethunger (pet p)
+    {
+        return p.hunger;
+    }
+    public static int gethappiness (pet p)
+    {
+        return p.happiness;
+    }
+    public static pet randStats (pet record)
+    {
+        setpethunger(record, general.getRand(5));
+        setpethappiness(record, general.getRand(5));
+        return record;
+    }
+    public static void stateofpet (pet record)
+    {
+        //hunger value then used to determine message
+        if ( gethunger(record) == 1) {
+            general.print("Pet is bloated. Hunger score at " + gethunger(record) +"/5");
+        } else if (gethunger(record) == 2) {
+            general.print("Pet is full. Hunger score at " + gethunger(record) +"/5");
+        } else if (gethunger(record) == 3) {
+            general.print("Pet is peckish. Hunger score at " + gethunger(record) +"/5");
+        } else if (gethunger(record) == 4) {
+            general.print("Pet is famished. Hunger score at " + gethunger(record) +"/5");
+        } else {
+            general.print("Pet is ravenous. Hunger score at " + gethunger(record) +"/5");
+        }
+
+        if ( gethappiness(record) == 1) {
+            general.print("Pet is blissfull. Happiness score at " + gethappiness(record) +"/5");
+        } else if (gethappiness(record) == 2) {
+            general.print("Pet is cheerfull. Happiness score at " + gethappiness(record) +"/5");
+        } else if (gethappiness(record) == 3) {
+            general.print("Pet is neutral. Happiness score at " + gethappiness(record) +"/5");
+        } else if (gethappiness(record) == 4) {
+            general.print("Pet is unhappy. Happiness score at " + gethappiness(record) +"/5");
+        } else {
+            general.print("Pet is depressed. Happiness score at " + gethappiness(record) +"/5");
+        }
+    }
+    public static boolean feedCuddle (String action, pet record)
+    {
+        if (action.equals("cuddle")) {
+            setpethappiness(record, (gethappiness(record) - general.getRand(3)));
+            if (gethappiness(record) < 1) {
+                setpethappiness(record, 1);
+            }
+            setpethunger(record, (gethunger(record) + general.getRand(3)));
+            if (gethunger(record) > 5) {
+                setpethunger(record, 5);
+            }
+            return true;
+        }
+
+        if (action.equals("feed")) {
+            setpethunger(record, (gethunger(record) - general.getRand(3)));
+            if (gethunger(record) < 1) {
+                setpethunger(record, 1);
+            }
+            setpethappiness(record, (gethappiness(record) + general.getRand(3)));
+            if (gethappiness(record) > 5) {
+                setpethappiness(record, 5);
+            }
+            return true;
+        }
+        return false;
+    }
+    public static void setpethappiness (pet p, int newvalue)
+    {
+        p.happiness = newvalue;
+        return;
+    }
+    public static void setpethunger (pet p, int newvalue)
+    {
+        p.hunger = newvalue;
+        return;
+    }
+    public static void regressStats (pet record)
+    {
+        int newhunger = gethunger(record) + general.getRand(2);
+        int newhappiness = gethappiness(record) + general.getRand(2);
+        if (newhunger > 5)
+        {
+            newhunger = 5;
+        }
+        if (newhappiness > 5)
+        {
+            newhappiness = 5;
+        }
+        setpethunger(record, newhunger);
+        setpethappiness(record, newhappiness);
+    }
+    public static pet createpet (String name, String species)
+    {
+        pet record = new pet();
+        setpetname(record, name);
+        setpetspecies(record, species);
+        randStats(record);
+        return record;
+    }
+
+}
+
+class pet
+{
+    String name;
+    String species;
+    int hunger;
+    int happiness;
 }
