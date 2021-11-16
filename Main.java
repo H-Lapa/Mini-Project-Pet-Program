@@ -7,10 +7,9 @@ class Game {
     {
         String petname;
         String petspecies;
-
-        pet[] petarr = new pet[5];
         general.print("(maximum of 5)");
         int petQuant = general.getint("Quantity of pets: ");
+        pet[] petarr = new pet[petQuant];
         for (int i = 0; i < petQuant; i++)
         {
             petname = general.getstring("Pet name: ");
@@ -24,40 +23,108 @@ class Game {
         String action;
         int num;
         int petnum;
-        boolean valid = true;
+        int[][] temp = new int[5][2];
+
         while (end == false)
         {
+            //sets temp to current petarray stored, clones it otherwise temp will be assigned to memory location and update along with petarr, used later for comparison
+            temp = statClone(petarr);
+
+            //prints pet name and stats to screen
             for (int z = 0; z < petQuant; z++)
             {
                 general.print(" ");
                 general.print(z+1 + ". " + getname(petarr[z]) + " the " + getspecies(petarr[z]));
                 stateofpet(petarr[z]);
             }
-            general.print(" ");
+
+            System.out.println("             "); // gap to make visually appealing
             num = general.getint("Pick a pet to apply action: ");
             petnum = num - 1;
             action = general.getstring("Feed or Cuddle pet: ");
-            valid = feedCuddle(action, petarr[petnum]);
-            if (valid == true)
+
+            // if function returns true
+            if (feedCuddle(action, petarr[petnum]))
             {
                 for (int i = 0; i < petQuant;i++)
                 {
+                    //dimiishes stats of all other pets except the one where action is applied
                     if (petarr[i] != petarr[petnum])
                     {
                         regressStats(petarr[i]);
                     }
                 }
-                count += 1;
             }
             else
             {
                 general.print("Sorry your response wasnt understood! Please try again...");
             }
 
+
+            //checks if stats using previous array and current array
+            if (loseCheck(temp, petarr)) {
+                //if true then it prints an end message
+                for (int z = 0; z < petQuant; z++)
+                {
+                    general.print(" ");
+                    general.print(getname(petarr[z]) + " the " + getspecies(petarr[z]));
+                    stateofpet(petarr[z]);
+                }
+                general.print("Hunger or Happiness was at 5 for 2 rounds!");
+                //sets end to true to end loop
+                end = true;
+            }
+            else
+            {
+                //count is incremented because of another successful round
+                count += 1;
+            }
+
+            //when 10 rounds have passed
+            if (count == 10) {
+                for (int z = 0; z < petQuant; z++)
+                {
+                    //print winning message
+                    general.print(" ");
+                    general.print(getname(petarr[z]) + " the " + getspecies(petarr[z]));
+                    stateofpet(petarr[z]);
+                }
+                general.print("You won! you lasted until round 10.");
+                end = true;
+            }
+
         }
 
         System.exit(0);
     }
+
+    public static int[][] statClone (pet[] curr)
+    {
+        int[][] petStat = new int[5][2];
+        for (int i=0; i< curr.length; i++)
+        {
+            petStat[i][0] = curr[i].hunger;
+            petStat[i][1] = curr[i].happiness;
+        }
+        return petStat;
+    }
+
+    public static boolean loseCheck (int[][] prev, pet[] curr)
+    {
+        for (int z=0; z< curr.length; z++)
+        {
+            if ((prev[z][0] == 5 && curr[z].hunger == 5) || (prev[z][1] == 5 && curr[z].happiness == 5) )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+
+
 
 
 
@@ -95,8 +162,8 @@ class Game {
     }
     public static pet randStats (pet record)
     {
-        setpethunger(record, general.getRand(5));
-        setpethappiness(record, general.getRand(5));
+        record.hunger = general.getRand(5);
+        record.happiness = general.getRand(5);
         return record;
     }
     public static void stateofpet (pet record)
@@ -129,25 +196,25 @@ class Game {
     public static boolean feedCuddle (String action, pet record)
     {
         if (action.equals("cuddle")) {
-            setpethappiness(record, (gethappiness(record) - general.getRand(3)));
+            record.happiness = (gethappiness(record) - general.getRand(3));
             if (gethappiness(record) < 1) {
-                setpethappiness(record, 1);
+                record.happiness = 1;
             }
-            setpethunger(record, (gethunger(record) + general.getRand(3)));
+            record.hunger = (gethunger(record) + general.getRand(3));
             if (gethunger(record) > 5) {
-                setpethunger(record, 5);
+                record.hunger = 5;
             }
             return true;
         }
 
         if (action.equals("feed")) {
-            setpethunger(record, (gethunger(record) - general.getRand(3)));
+            record.hunger = (gethunger(record) - general.getRand(3));
             if (gethunger(record) < 1) {
-                setpethunger(record, 1);
+                record.hunger = 1;
             }
-            setpethappiness(record, (gethappiness(record) + general.getRand(3)));
+            record.happiness = (gethappiness(record) + general.getRand(3));
             if (gethappiness(record) > 5) {
-                setpethappiness(record, 5);
+                record.happiness = 5;
             }
             return true;
         }
@@ -175,8 +242,8 @@ class Game {
         {
             newhappiness = 5;
         }
-        setpethunger(record, newhunger);
-        setpethappiness(record, newhappiness);
+        record.hunger = newhunger;
+        record.happiness = newhappiness;
     }
     public static pet createpet (String name, String species)
     {
