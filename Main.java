@@ -24,23 +24,30 @@ class Game {
         int num;
         int petnum;
         int[][] temp = new int[5][2];
+        pet[] sortedArr = new pet[petQuant];
 
         while (end == false)
         {
             //sets temp to current petarray stored, clones it otherwise temp will be assigned to memory location and update along with petarr, used later for comparison
             temp = statClone(petarr);
 
+            //implement insertion sort for new array
+            sortedArr = insertionSort(petarr);
+
+
             //prints pet name and stats to screen
             for (int z = 0; z < petQuant; z++)
             {
+                //this hsould loop through the insertion sorted array
                 general.print(" ");
-                general.print(z+1 + ". " + getname(petarr[z]) + " the " + getspecies(petarr[z]));
-                stateofpet(petarr[z]);
+                general.print(z+1 + ". " + getname(sortedArr[z]) + " the " + getspecies(sortedArr[z]));
+                stateofpet(sortedArr[z]);
             }
 
             System.out.println("             "); // gap to make visually appealing
             num = general.getint("Pick a pet to apply action: ");
-            petnum = num - 1;
+            petnum = num-1;
+            //petnum = findloc(petarr, sortedArr[petnum]);
             action = general.getstring("Feed or Cuddle pet: ");
 
             // if function returns true
@@ -122,7 +129,30 @@ class Game {
         return false;
     }
 
+    public static pet[] insertionSort (pet[] array)
+    {
+        //does insertion sort on pet array and returns
+        int n = array.length;
+        for (int j = 1; j < n; j++) {
+            int key = getCombinedStats(array[j]);
+            pet secKey = array[j];
+            int i = j-1;
+            while ( (i > -1) && ( getCombinedStats(array[i]) > key ) ) {
+                array[i+1] = array[i];
+                i--;
+            }
+            array[i+1] = secKey;
+        }
+        return array;
+    }
 
+
+
+    public static int getCombinedStats (pet x)
+    {
+        int num = gethappiness(x) + gethunger(x);
+        return num;
+    }
 
 
 
