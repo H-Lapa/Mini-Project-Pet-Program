@@ -12,15 +12,15 @@ class Game {
         //declaration of variables for creating pets
         String petname;
         String petspecies;
-        general.print("(maximum of 5)");
-        int petQuant = general.getint("Quantity of pets: ");
+        print("(maximum of 5)");
+        int petQuant = getint("Quantity of pets: ");
         pet[] petarr = new pet[petQuant]; // pet array delcaration
 
         //loop which creates pets, and puts them into an array
         for (int i = 0; i < petQuant; i++)
         {
-            petname = general.getstring("Pet name: ");
-            petspecies = general.getstring("Pet species: ");
+            petname = getstring("Pet name: ");
+            petspecies = getstring("Pet species: ");
             pet record = createpet(petname, petspecies);
             petarr[i] = record;
         }
@@ -48,18 +48,18 @@ class Game {
             for (int z = 0; z < petQuant; z++)
             {
                 //this should loop through the insertion sorted array
-                general.print(" ");
-                general.print(z+1 + ". " + getname(sortedArr[z]) + " the " + getspecies(sortedArr[z]));
+                print(" ");
+                print(z+1 + ". " + getname(sortedArr[z]) + " the " + getspecies(sortedArr[z]));
                 stateofpet(sortedArr[z]);
             }
 
             System.out.println("             "); // gap to make visually appealing
 
             //user interaction, asking which pet to apply action and wether to feed or cuddle
-            num = general.getint("Pick a pet to apply action: ");
+            num = getint("Pick a pet to apply action: ");
             petnum = num-1;
             petnum = findloc(petarr, sortedArr[petnum]);
-            action = general.getstring("Feed or Cuddle pet: ");
+            action = getstring("Feed or Cuddle pet: ");
 
             // if function returns true, function also acts on the pet which was selected by feeding or cuddling
             if (feedCuddle(action, petarr[petnum]))
@@ -75,7 +75,7 @@ class Game {
             }
             else
             {
-                general.print("Sorry your response wasnt understood! Please try again...");
+                print("Sorry your response wasnt understood! Please try again...");
             }
 
 
@@ -84,11 +84,11 @@ class Game {
                 //if true then it prints an end message
                 for (int z = 0; z < petQuant; z++)
                 {
-                    general.print(" ");
-                    general.print(getname(petarr[z]) + " the " + getspecies(petarr[z]));
+                    print(" ");
+                    print(getname(petarr[z]) + " the " + getspecies(petarr[z]));
                     stateofpet(petarr[z]);
                 }
-                general.print("Hunger or Happiness was at 5 for 2 rounds!");
+                print("Hunger or Happiness was at 5 for 2 rounds!");
                 //sets end to true to end loop
                 end = true;
             }
@@ -103,11 +103,11 @@ class Game {
                 for (int z = 0; z < petQuant; z++)
                 {
                     //print winning message
-                    general.print(" ");
-                    general.print(getname(petarr[z]) + " the " + getspecies(petarr[z]));
+                    print(" ");
+                    print(getname(petarr[z]) + " the " + getspecies(petarr[z]));
                     stateofpet(petarr[z]);
                 }
-                general.print("You won! you lasted until round 10.");
+                print("You won! you lasted until round 10.");
                 end = true;
             }
 
@@ -164,11 +164,11 @@ class Game {
         }
         return array;
     }//END of insertionSort
-    
+
     //returns the addition of both happiness and hunger
     public static int getCombinedStats (pet x)
     {
-        
+
         int num = gethappiness(x) + gethunger(x);
         return num;
     }//END of getCombinedStats
@@ -182,7 +182,7 @@ class Game {
             //if the pet in the array is the same as the pet your searching for
             if (petarr[i] == petchoice)
             {
-                //then return the i value 
+                //then return the i value
                 return i;
             }
         }
@@ -193,67 +193,67 @@ class Game {
     //gives a pet random hunger and happiness levels
     public static pet randStats (pet record)
     {
-        record.hunger = general.getRand(5);
-        record.happiness = general.getRand(5);
+        record.hunger = getRand(5);
+        record.happiness = getRand(5);
         return record;
     }//END of randStats
-    
+
     //returns the state fo the pet depedning on the value of hunger / happiness
     public static void stateofpet (pet record)
     {
         //hunger value then used to determine message
         if ( gethunger(record) == 1) {
-            general.print("Pet is bloated. Hunger score at " + gethunger(record) +"/5");
+            print("Pet is bloated. Hunger score at " + gethunger(record) +"/5");
         } else if (gethunger(record) == 2) {
-            general.print("Pet is full. Hunger score at " + gethunger(record) +"/5");
+            print("Pet is full. Hunger score at " + gethunger(record) +"/5");
         } else if (gethunger(record) == 3) {
-            general.print("Pet is peckish. Hunger score at " + gethunger(record) +"/5");
+            print("Pet is peckish. Hunger score at " + gethunger(record) +"/5");
         } else if (gethunger(record) == 4) {
-            general.print("Pet is famished. Hunger score at " + gethunger(record) +"/5");
+            print("Pet is famished. Hunger score at " + gethunger(record) +"/5");
         } else {
-            general.print("Pet is ravenous. Hunger score at " + gethunger(record) +"/5");
+            print("Pet is ravenous. Hunger score at " + gethunger(record) +"/5");
         }
 
         if ( gethappiness(record) == 1) {
-            general.print("Pet is blissfull. Happiness score at " + gethappiness(record) +"/5");
+            print("Pet is blissfull. Happiness score at " + gethappiness(record) +"/5");
         } else if (gethappiness(record) == 2) {
-            general.print("Pet is cheerfull. Happiness score at " + gethappiness(record) +"/5");
+            print("Pet is cheerfull. Happiness score at " + gethappiness(record) +"/5");
         } else if (gethappiness(record) == 3) {
-            general.print("Pet is neutral. Happiness score at " + gethappiness(record) +"/5");
+            print("Pet is neutral. Happiness score at " + gethappiness(record) +"/5");
         } else if (gethappiness(record) == 4) {
-            general.print("Pet is unhappy. Happiness score at " + gethappiness(record) +"/5");
+            print("Pet is unhappy. Happiness score at " + gethappiness(record) +"/5");
         } else {
-            general.print("Pet is depressed. Happiness score at " + gethappiness(record) +"/5");
+            print("Pet is depressed. Happiness score at " + gethappiness(record) +"/5");
         }
     }//END of stateofpet
-    
-    //applies the cuddle or feed, on a chosen pet 
+
+    //applies the cuddle or feed, on a chosen pet
     public static boolean feedCuddle (String action, pet record)
     {
         //if its cuddle, will decrease the value of happiness
         if (action.equals("cuddle")) {
-            record.happiness = (gethappiness(record) - general.getRand(3));
+            record.happiness = (gethappiness(record) - getRand(3));
             //if happiness is less than 1 then it becomes 1
             if (gethappiness(record) < 1) {
                 record.happiness = 1;
             }
             //however hunger value increases with a limit of 5
-            record.hunger = (gethunger(record) + general.getRand(3));
+            record.hunger = (gethunger(record) + getRand(3));
             if (gethunger(record) > 5) {
                 record.hunger = 5;
             }
             return true;
         }
-        
+
         //if its feed, will decrease the value of hunger
         if (action.equals("feed")) {
-            record.hunger = (gethunger(record) - general.getRand(3));
+            record.hunger = (gethunger(record) - getRand(3));
             //hunger is less than 1 it gets set back to 1 as thats the limit
             if (gethunger(record) < 1) {
                 record.hunger = 1;
             }
             //however the happiness value increases with a limit of 5
-            record.happiness = (gethappiness(record) + general.getRand(3));
+            record.happiness = (gethappiness(record) + getRand(3));
             if (gethappiness(record) > 5) {
                 record.happiness = 5;
             }
@@ -262,12 +262,12 @@ class Game {
         //returns false when none of the statements was successful
         return false;
     }//END of feedCuddle
-    
+
     //worsening of the hunger and happiness of pets randomly
     public static void regressStats (pet record)
     {
-        int newhunger = gethunger(record) + general.getRand(2);
-        int newhappiness = gethappiness(record) + general.getRand(2);
+        int newhunger = gethunger(record) + getRand(2);
+        int newhappiness = gethappiness(record) + getRand(2);
         if (newhunger > 5)
         {
             newhunger = 5;
@@ -279,10 +279,45 @@ class Game {
         record.hunger = newhunger;
         record.happiness = newhappiness;
     }//END of regressStats
-    
+
+    //General Methods - non specific
+
+    //prints to screen in less words
+    public static void print (String txt)
+    {
+        System.out.println(txt);
+        return;
+    }//END of print
+
+    //prints string and accepts string input which it returns
+    public static String getstring (String x)
+    {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print(x);
+        String response = scanner.nextLine();
+        return response;
+    }//END of getString
+
+    //prints string and accepts integer input which it returns
+    public static int getint (String x)
+    {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print(x);
+        int response = scanner.nextInt();
+        return response;
+    }//END of getint
+
+    //retuns a random number within the rnage given
+    public static int getRand (int limit)
+    {
+        Random rand = new Random();
+        int random = rand.nextInt(limit) + 1;
+        return random;
+    }//END of getRand
+
 
     //accessor methods, only methods directly accessing the values in the pet ADT
-    
+
     //creates an ADT using the parameters
     public static pet createpet (String name, String species)
     {
@@ -292,9 +327,9 @@ class Game {
         randStats(record);
         return record;
     }//END of createpet
-    
+
     //getters and setters
-    
+
     public static void setpetspecies (pet p, String txt)
     {
         p.species = txt;
