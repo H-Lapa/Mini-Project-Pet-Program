@@ -1,12 +1,13 @@
 //Author: Hugo Lapa
 //31/10/2021
 
-//impots for the program
+//imports for the program
 import java.util.Scanner;
 import java.util.Random;
 
 
 class Game {
+    //executes the main procedural program
     public static void main (String[] args)
     {
         //declaration of variables for creating pets
@@ -85,8 +86,8 @@ class Game {
                 for (int z = 0; z < petQuant; z++)
                 {
                     print(" ");
-                    print(getname(petarr[z]) + " the " + getspecies(petarr[z]));
-                    stateofpet(petarr[z]);
+                    print(getname(sortedArr[z]) + " the " + getspecies(sortedArr[z]));
+                    stateofpet(sortedArr[z]);
                 }
                 print("Hunger or Happiness was at 5 for 2 rounds!");
                 //sets end to true to end loop
