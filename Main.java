@@ -26,7 +26,6 @@ class Game {
             petarr[i] = record;
         }
 
-
         //declaration of variables needed for while loop
         boolean end = false;
         int count = 0;
@@ -124,8 +123,8 @@ class Game {
         for (int i=0; i< curr.length; i++)
         {
             //copying the hunger and happiness values
-            petStat[i][0] = curr[i].hunger;
-            petStat[i][1] = curr[i].happiness;
+            petStat[i][0] = gethunger(curr[i]);
+            petStat[i][1] = gethappiness(curr[i]);
         }
         return petStat;
     }//END of statClone
@@ -137,7 +136,7 @@ class Game {
         for (int z=0; z< curr.length; z++)
         {
             //if the hunger or happiness is equal to 5 from previous and current round then the user has lost
-            if ((prev[z][0] == 5 && curr[z].hunger == 5) || (prev[z][1] == 5 && curr[z].happiness == 5) )
+            if ((prev[z][0] == 5 && gethunger(curr[z]) == 5) || (prev[z][1] == 5 && gethappiness(curr[z]) == 5) )
             {
                 //thus returns true
                 return true;
@@ -194,8 +193,8 @@ class Game {
     //gives a pet random hunger and happiness levels
     public static pet randStats (pet record)
     {
-        record.hunger = getRand(5);
-        record.happiness = getRand(5);
+        setpethunger(record, getRand(5));
+        setpethappiness(record, getRand(5));
         return record;
     }//END of randStats
 
@@ -233,30 +232,30 @@ class Game {
     {
         //if its cuddle, will decrease the value of happiness
         if (action.equals("cuddle")) {
-            record.happiness = (gethappiness(record) - getRand(3));
+            setpethappiness(record, (gethappiness(record) - getRand(3)));
             //if happiness is less than 1 then it becomes 1
             if (gethappiness(record) < 1) {
-                record.happiness = 1;
+                setpethappiness(record, 1);
             }
             //however hunger value increases with a limit of 5
-            record.hunger = (gethunger(record) + getRand(3));
+            setpethunger(record, (gethunger(record) + getRand(3)));
             if (gethunger(record) > 5) {
-                record.hunger = 5;
+                setpethunger(record, 5);
             }
             return true;
         }
 
         //if its feed, will decrease the value of hunger
         if (action.equals("feed")) {
-            record.hunger = (gethunger(record) - getRand(3));
+            setpethunger(record, (gethunger(record) - getRand(3)));
             //hunger is less than 1 it gets set back to 1 as thats the limit
             if (gethunger(record) < 1) {
-                record.hunger = 1;
+                setpethunger(record, 1);
             }
             //however the happiness value increases with a limit of 5
-            record.happiness = (gethappiness(record) + getRand(3));
+            setpethappiness(record, (gethappiness(record) + getRand(3)));
             if (gethappiness(record) > 5) {
-                record.happiness = 5;
+                setpethappiness(record, 5);
             }
             return true;
         }
@@ -277,8 +276,8 @@ class Game {
         {
             newhappiness = 5;
         }
-        record.hunger = newhunger;
-        record.happiness = newhappiness;
+        setpethunger(record, newhunger);
+        setpethappiness(record, newhappiness);
     }//END of regressStats
 
     //General Methods - non specific
