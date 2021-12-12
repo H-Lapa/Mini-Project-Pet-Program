@@ -4,12 +4,13 @@
 //imports for the program
 import java.util.Scanner;
 import java.util.Random;
-
+import java.io.*;
 
 class Game {
     //executes the main procedural program
     public static void main (String[] args)
     {
+        LeaderboardQuestion();
         //declaration of variables for creating pets
         String petname;
         String petspecies;
@@ -81,6 +82,8 @@ class Game {
 
             //checks if stats using previous array and current array
             if (loseCheck(temp, petarr)) {
+                //implement insertion sort for new array
+                sortedArr = insertionSort(petarr);
                 //if true then it prints an end message
                 for (int z = 0; z < petQuant; z++)
                 {
@@ -89,6 +92,7 @@ class Game {
                     stateofpet(sortedArr[z]);
                 }
                 print("Hunger or Happiness was at 5 for 2 rounds!");
+                leaderboardInput("leaderboard.txt", petarr, count+1);
                 //sets end to true to end loop
                 end = true;
             }
@@ -106,6 +110,7 @@ class Game {
                     print(" ");
                     print(getname(petarr[z]) + " the " + getspecies(petarr[z]));
                     stateofpet(petarr[z]);
+                    leaderboardInput("leaderboard.txt", petarr, 10);
                 }
                 print("You won! you lasted until round 10.");
                 end = true;
@@ -115,6 +120,69 @@ class Game {
 
         System.exit(0);
     }//END of main
+
+    public static void LeaderboardQuestion ()
+    {
+        String response = getstring("Do you want to see the leader board before we start? (y/n)");
+        if (response.equals("n"))
+        {
+            return;
+        }
+        else if (response.equals("y"))
+        {
+            leaderboardOutput("leaderboard.txt");
+        }
+
+    }
+
+    public static void leaderboardInput (String fileName, pet[] petArr, int rounds)
+    {
+        //writes into the file
+        try (FileOutputStream fis = new FileOutputStream(fileName, true))
+        {
+            String message = "Rounds lasted for ";
+            for (int i = 0; i < petArr.length; i++)
+            {
+                if (i != petArr.length)
+                {
+                    message += petArr[i].name + ", ";
+                }
+                else
+                {
+                    message += petArr[i].name;
+                }
+
+            }
+            message += " was " + rounds + "\n";
+            fis.write(message.getBytes());
+            fis.close();
+
+        }
+        catch (IOException ex)
+        {
+            print("Error");
+        }
+    }
+
+    public static void leaderboardOutput (String fileName)
+    {
+        //prints the leaderboard
+        try (FileInputStream fis = new FileInputStream(fileName))
+        {
+            int i;
+
+            while ((i = fis.read()) != -1) {
+                System.out.print((char) i);
+            }
+            print("\n");
+            fis.close();
+        }
+        catch (IOException ex)
+        {
+            print("There is no leaderboard!");
+        }
+
+    }//END of leaderboardOutput
 
     //clones the hunger and happiness stats from a pet class into a 2d array and returns it
     public static int[][] statClone (pet[] curr)
